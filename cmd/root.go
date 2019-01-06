@@ -60,7 +60,7 @@ var rootCmd = &cobra.Command{
 	Long: `File Browser CLI lets you create the database to use with File Browser,
 manage your users and all the configurations without acessing the
 web interface.
-	
+
 If you've never run File Browser, you'll need to have a database for
 it. Don't worry: you don't need to setup a separate database server.
 We're using Bolt DB which is a single file database and all managed
@@ -95,6 +95,9 @@ user created with the credentials from options "username" and "password".`,
 }
 
 func serveAndListen(cmd *cobra.Command, args []string) {
+
+	log.Println(cfgFile)
+
 	switch logMethod := v.GetString("log"); logMethod {
 	case "stdout":
 		log.SetOutput(os.Stdout)
@@ -112,7 +115,7 @@ func serveAndListen(cmd *cobra.Command, args []string) {
 	}
 
 	if _, err := os.Stat(v.GetString("database")); os.IsNotExist(err) {
-		quickSetup(cmd)
+		quickSetup()
 	}
 
 	db := getDB()
@@ -161,7 +164,7 @@ func serveAndListen(cmd *cobra.Command, args []string) {
 	}
 }
 
-func quickSetup(cmd *cobra.Command) {
+func quickSetup() {
 	db, err := storm.Open(v.GetString("database"))
 	checkErr(err)
 	defer db.Close()
@@ -204,7 +207,7 @@ func quickSetup(cmd *cobra.Command) {
 	}
 
 	if username == "" || password == "" {
-		checkErr(errors.New("username and password cannot be empty during quick setup"))
+		log.Fatal("username and password cannot be empty during quick setup")
 	}
 
 	user := &users.User{
@@ -240,7 +243,7 @@ func initConfig() {
 		if _, ok := err.(v.ConfigParseError); ok {
 			panic(err)
 		}
-		// TODO: log.Println("No config file provided")
+		cfgFile = "No config file used"
 	}
-	// else TODO: log.Println("Using config file:", v.ConfigFileUsed())
+	cfgFile = "Using config file: "+v.ConfigFileUsed()
 }
