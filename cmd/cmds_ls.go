@@ -15,11 +15,7 @@ var cmdsLsCmd = &cobra.Command{
 	Long:  `List all commands for each event.`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		db := getDB()
-		defer db.Close()
-		st := getStorage(db)
-		s, err := st.Settings.Get()
-		checkErr(err)
+		_, s := getStorageSettings()
 		evt := mustGetString(cmd, "event")
 
 		if evt == "" {

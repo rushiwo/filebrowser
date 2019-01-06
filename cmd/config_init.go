@@ -1,12 +1,11 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
-	"github.com/asdine/storm"
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/spf13/cobra"
 	v "github.com/spf13/viper"
@@ -30,17 +29,14 @@ override the options.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		databasePath := v.GetString("database")
 		if _, err := os.Stat(databasePath); err == nil {
-			panic(errors.New(databasePath + " already exists"))
+			log.Fatal(databasePath + " already exists")
 		}
 
 		defaults := settings.UserDefaults{}
 		getUserDefaults(cmd, &defaults, true)
 		authMethod, auther := getAuthentication(cmd)
 
-		db, err := storm.Open(databasePath)
-		checkErr(err)
-		defer db.Close()
-		st := getStorage(db)
+		st := getStorage()
 		s := &settings.Settings{
 			Key:        generateRandomBytes(64), // 256 bit
 			Signup:     mustGetBool(cmd, "signup"),
@@ -54,7 +50,7 @@ override the options.`,
 			},
 		}
 
-		err = st.Settings.Save(s)
+		err := st.Settings.Save(s)
 		checkErr(err)
 		err = st.Auth.Save(auther)
 		checkErr(err)

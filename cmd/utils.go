@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/asdine/storm"
+	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/storage"
 	"github.com/filebrowser/filebrowser/v2/storage/bolt"
 	"github.com/spf13/cobra"
@@ -72,8 +73,17 @@ func getDB() *storm.DB {
 	return db
 }
 
-func getStorage(db *storm.DB) *storage.Storage {
+func getStorage() *storage.Storage {
+	db := getDB()
+	defer db.Close()
 	return bolt.NewStorage(db)
+}
+
+func getStorageSettings() (*storage.Storage, *settings.Settings) {
+	st := getStorage()
+	s, err := st.Settings.Get()
+	checkErr(err)
+	return st, s
 }
 
 func generateRandomBytes(n int) []byte {

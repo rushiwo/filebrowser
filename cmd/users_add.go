@@ -16,12 +16,7 @@ var usersAddCmd = &cobra.Command{
 	Long:  `Create a new user and add it to the database.`,
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		db := getDB()
-		defer db.Close()
-		st := getStorage(db)
-
-		s, err := st.Settings.Get()
-		checkErr(err)
+		st, s := getStorageSettings()
 		getUserDefaults(cmd, &s.Defaults, false)
 
 		password, err := users.HashPwd(args[1])

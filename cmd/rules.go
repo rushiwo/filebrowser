@@ -33,9 +33,7 @@ rules.`,
 }
 
 func runRules(cmd *cobra.Command, users func(*users.User, *storage.Storage), global func(*settings.Settings, *storage.Storage)) {
-	db := getDB()
-	defer db.Close()
-	st := getStorage(db)
+	st, s := getStorageSettings()
 
 	id := getUserIdentifier(cmd)
 	if id != nil {
@@ -50,14 +48,11 @@ func runRules(cmd *cobra.Command, users func(*users.User, *storage.Storage), glo
 		return
 	}
 
-	settings, err := st.Settings.Get()
-	checkErr(err)
-
 	if global != nil {
-		global(settings, st)
+		global(s, st)
 	}
 
-	printRules(settings.Rules, id)
+	printRules(s.Rules, id)
 }
 
 func getUserIdentifier(cmd *cobra.Command) interface{} {

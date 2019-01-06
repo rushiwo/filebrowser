@@ -20,12 +20,7 @@ var configSetCmd = &cobra.Command{
 you want to change.`,
 	Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		db := getDB()
-		defer db.Close()
-
-		st := getStorage(db)
-		s, err := st.Settings.Get()
-		checkErr(err)
+		st, s := getStorageSettings()
 
 		hasAuth := false
 		cmd.Flags().Visit(func(flag *pflag.Flag) {
@@ -48,6 +43,7 @@ you want to change.`,
 		getUserDefaults(cmd, &s.Defaults, false)
 
 		var auther auth.Auther
+		var err error
 		if hasAuth {
 			s.AuthMethod, auther = getAuthentication(cmd)
 			err = st.Auth.Save(auther)

@@ -117,9 +117,7 @@ func serveAndListen(cmd *cobra.Command, args []string) {
 		quickSetup()
 	}
 
-	db := getDB()
-	defer db.Close()
-	st := getStorage(db)
+	st := getStorage()
 
 	// TODO: check if these fields (including baseurl) are available in the DB. proceed according to --force
 
@@ -193,7 +191,7 @@ func quickSetup() {
 		},
 	}
 
-	st := getStorage(db)
+	st := getStorage()
 
 	err = st.Settings.Save(set)
 	checkErr(err)

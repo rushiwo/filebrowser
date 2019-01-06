@@ -14,11 +14,7 @@ var configCatCmd = &cobra.Command{
 	Long:  `Prints the configuration.`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		db := getDB()
-		defer db.Close()
-		st := getStorage(db)
-		s, err := st.Settings.Get()
-		checkErr(err)
+		st, s := getStorageSettings()
 		auther, err := st.Auth.Get(s.AuthMethod)
 		checkErr(err)
 		printSettings(s, auther)

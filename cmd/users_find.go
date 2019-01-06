@@ -26,9 +26,7 @@ var usersLsCmd = &cobra.Command{
 }
 
 var findUsers = func(cmd *cobra.Command, args []string) {
-	db := getDB()
-	defer db.Close()
-	st := getStorage(db)
+	st := getStorage()
 
 	var (
 		list []*users.User

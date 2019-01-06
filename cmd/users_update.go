@@ -21,12 +21,7 @@ var usersUpdateCmd = &cobra.Command{
 options you want to change.`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		db := getDB()
-		defer db.Close()
-		st := getStorage(db)
-
-		set, err := st.Settings.Get()
-		checkErr(err)
+		st, s := getStorageSettings()
 
 		username, id := parseUsernameOrID(args[0])
 		password := mustGetString(cmd, "password")
@@ -34,10 +29,11 @@ options you want to change.`,
 
 		var user *users.User
 
+		var err error
 		if id != 0 {
-			user, err = st.Users.Get(set.Scope, id)
+			user, err = st.Users.Get(s.Scope, id)
 		} else {
-			user, err = st.Users.Get(set.Scope, username)
+			user, err = st.Users.Get(s.Scope, username)
 		}
 
 		checkErr(err)

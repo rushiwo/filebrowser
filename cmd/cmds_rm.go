@@ -28,11 +28,7 @@ var cmdsRmCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		db := getDB()
-		defer db.Close()
-		st := getStorage(db)
-		s, err := st.Settings.Get()
-		checkErr(err)
+		st, s := getStorageSettings()
 		evt := args[0]
 
 		i, err := strconv.Atoi(args[1])
