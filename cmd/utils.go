@@ -62,7 +62,7 @@ func mustGetUint(cmd *cobra.Command, flag string) uint {
 	return b
 }
 
-func getDB() *storm.DB {
+func getStorage() *storage.Storage {
 	databasePath := v.GetString("database")
 	if _, err := os.Stat(databasePath); err != nil {
 		log.Fatal(databasePath + " does not exist. Please run 'filebrowser init' first.")
@@ -70,11 +70,7 @@ func getDB() *storm.DB {
 
 	db, err := storm.Open(databasePath)
 	checkErr(err)
-	return db
-}
 
-func getStorage() *storage.Storage {
-	db := getDB()
 	defer db.Close()
 	return bolt.NewStorage(db)
 }
