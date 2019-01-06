@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"crypto/tls"
-	"errors"
 	"io/ioutil"
 	"log"
 	"net"
@@ -40,7 +39,7 @@ func init() {
 	vaddP(f, "port", "p", 8080, "port to listen on")
 	vaddP(f, "cert", "t", "", "tls certificate")
 	vaddP(f, "key", "k", "", "tls key")
-	vaddP(f, "scope", "s", ".", "scope to prepend to a user's scope when it is relative")
+	vaddP(f, "root", "s", ".", "root path to prepend to all relative paths")
 	vaddP(f, "baseurl", "b", "", "base url")
 	vadd(f, "username", "admin", "username for the first user when using quick config")
 	vadd(f, "password", "", "hashed password for the first user when using quick config (default \"admin\")")
@@ -122,13 +121,15 @@ func serveAndListen(cmd *cobra.Command, args []string) {
 	defer db.Close()
 	st := getStorage(db)
 
+	// TODO: check if these fields (including baseurl) are available in the DB. proceed according to --force
+
 	port := v.GetInt("port")
 	address := v.GetString("address")
 	cert := v.GetString("cert")
 	key := v.GetString("key")
-	scope := v.GetString("scope")
+	root := v.GetString("root")
 
-	scope, err := filepath.Abs(scope)
+	root, err := filepath.Abs(root)
 	checkErr(err)
 	settings, err := st.Settings.Get()
 	checkErr(err)
@@ -138,7 +139,7 @@ func serveAndListen(cmd *cobra.Command, args []string) {
 	// they are needed during the execution and not only
 	// to start up the server.
 	settings.BaseURL = v.GetString("baseurl")
-	settings.Scope = scope
+	settings.Scope = root
 	err = st.Settings.Save(settings)
 	checkErr(err)
 
@@ -168,6 +169,8 @@ func quickSetup() {
 	db, err := storm.Open(v.GetString("database"))
 	checkErr(err)
 	defer db.Close()
+
+	// TODO: save also port, address, cert, key, scope; if their values differ from defaults
 
 	set := &settings.Settings{
 		Key:        generateRandomBytes(64), // 256 bit
@@ -245,5 +248,5 @@ func initConfig() {
 		}
 		cfgFile = "No config file used"
 	}
-	cfgFile = "Using config file: "+v.ConfigFileUsed()
+	cfgFile = "Using config file: " + v.ConfigFileUsed()
 }

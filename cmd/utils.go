@@ -64,7 +64,7 @@ func mustGetUint(cmd *cobra.Command, flag string) uint {
 func getDB() *storm.DB {
 	databasePath := v.GetString("database")
 	if _, err := os.Stat(databasePath); err != nil {
-		panic(errors.New(databasePath + " does not exist. Please run 'filebrowser init' first."))
+		log.Fatal(databasePath + " does not exist. Please run 'filebrowser init' first.")
 	}
 
 	db, err := storm.Open(databasePath)
