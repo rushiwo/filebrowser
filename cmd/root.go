@@ -16,6 +16,7 @@ import (
 	fbhttp "github.com/filebrowser/filebrowser/v2/http"
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/users"
+	"github.com/filebrowser/filebrowser/v2/version"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	v "github.com/spf13/viper"
@@ -28,6 +29,7 @@ var (
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	rootCmd.SetVersionTemplate("File Browser version {{printf \"%s\" .Version}}\n")
 
 	f := rootCmd.Flags()
 	pf := rootCmd.PersistentFlags()
@@ -54,8 +56,9 @@ func init() {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "filebrowser",
-	Short: "A stylish web-based file browser",
+	Use:     "filebrowser",
+	Short:   "A stylish web-based file browser",
+	Version: version.Version,
 	Long: `File Browser CLI lets you create the database to use with File Browser,
 manage your users and all the configurations without acessing the
 web interface.

@@ -15,8 +15,9 @@ func init() {
 }
 
 var importCmd = &cobra.Command{
-	Use:   "import",
-	Short: "Imports an old configuration",
+	Use:     "import",
+	Version: rootCmd.Version,
+	Short:   "Imports an old configuration",
 	Long: `Imports an old configuration. This command DOES NOT
 import share links because they are incompatible with
 this version.`,
