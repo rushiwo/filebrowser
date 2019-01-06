@@ -15,7 +15,7 @@ import (
 func init() {
 	configCmd.AddCommand(configInitCmd)
 	rootCmd.AddCommand(configInitCmd)
-	addConfigFlags(configInitCmd)
+	addConfigFlags(configInitCmd.Flags())
 }
 
 var configInitCmd = &cobra.Command{
