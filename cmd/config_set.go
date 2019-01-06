@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"log"
 	"strings"
 
 	"github.com/filebrowser/filebrowser/v2/auth"
@@ -20,6 +21,7 @@ var configSetCmd = &cobra.Command{
 you want to change.`,
 	Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Println(cfgFile)
 		st, s := getStorageSettings()
 
 		hasAuth := false

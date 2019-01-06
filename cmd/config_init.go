@@ -26,6 +26,7 @@ to the defaults when creating new users and you don't
 override the options.`,
 	Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Println(cfgFile)
 		databasePath := v.GetString("database")
 		if _, err := os.Stat(databasePath); err == nil {
 			log.Fatal(databasePath + " already exists")

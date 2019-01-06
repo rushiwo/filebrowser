@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"log"
+
 	"github.com/spf13/cobra"
 )
 
@@ -14,6 +16,7 @@ var configCatCmd = &cobra.Command{
 	Long:  `Prints the configuration.`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
+		log.Println(cfgFile)
 		st, s := getStorageSettings()
 		auther, err := st.Auth.Get(s.AuthMethod)
 		checkErr(err)
