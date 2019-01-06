@@ -25,10 +25,6 @@ var configCmd = &cobra.Command{
 	Short: "Configuration management utility",
 	Long:  `Configuration management utility.`,
 	Args:  cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
-		os.Exit(0)
-	},
 }
 
 func addConfigFlags(f *pflag.FlagSet) {
