@@ -16,7 +16,7 @@ import (
 	fbhttp "github.com/filebrowser/filebrowser/v2/http"
 	"github.com/filebrowser/filebrowser/v2/settings"
 	"github.com/filebrowser/filebrowser/v2/users"
-	"github.com/mitchellh/go-homedir"
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	v "github.com/spf13/viper"
 	lumberjack "gopkg.in/natefinch/lumberjack.v2"
@@ -245,6 +245,7 @@ func initConfig() {
 			panic(err)
 		}
 		cfgFile = "No config file used"
+	} else {
+		cfgFile = "Using config file: " + v.ConfigFileUsed()
 	}
-	cfgFile = "Using config file: " + v.ConfigFileUsed()
 }
