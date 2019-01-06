@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"crypto/rand"
-	"errors"
+	"log"
 	"os"
 
 	"github.com/asdine/storm"
