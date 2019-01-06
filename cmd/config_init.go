@@ -13,7 +13,6 @@ import (
 
 func init() {
 	configCmd.AddCommand(configInitCmd)
-	rootCmd.AddCommand(configInitCmd)
 	addConfigFlags(configInitCmd.Flags())
 }
 
